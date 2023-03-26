@@ -24,7 +24,6 @@ public class Connection {
         this.reciever = obReciever;
         this.socket = socket;
         this.maxTasks = maxTasks;
-        System.out.println("\nConnection created, id : " + id + "\n");
     }
     public synchronized int getId() {
         return id;

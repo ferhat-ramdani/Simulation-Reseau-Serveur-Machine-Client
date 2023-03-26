@@ -2,14 +2,13 @@
  * This is a thread class that retrieves a task from 
  * taskQueue, calculates the persistance of each number in 
  * task and immediatly stores it in a private completed task,
- * then sends the completed task through the taskSocket
+ * then sends the completed task.
  */
 package worker.computer;
 
 import worker.manager.*;
 
 import java.io.IOException;
-import java.util.Hashtable;
 
 import worker.Network;
 public class Peasant extends Thread {
@@ -41,22 +40,18 @@ public class Peasant extends Thread {
         while(true){
             range = taskQueue.getTask();
             task = new CompletedTask(range);
-            System.out.println("\nAbout to start peasant, range : [" + range[0] + " , " + range[1] + "] in " + id + "\n");
+            System.out.println("\nAbout to start" + getName()+ "\n" + 
+            "Range : [" + range[0] + " , " + range[1] + "] in " + id + "\n");
             String number = range[0];
             for(int i = 0; i < Integer.parseInt(range[2]); i++) {
-            // for(int i = 0; i < 10; i++) {
                 int p = Calculator.calculatePersistanceOf(number);
                 task.addNumber(number, p);
-                // System.out.println("\n" + number + " : " + p + " \n");
                 number = Calculator.incrementNumber(number);
                 progress = (int) ((i + 1) / Double.parseDouble(range[2]) * 100);
-                // System.out.println("\nJust updated progress : " + progress + "\n");
             }
             System.out.print("\n" + getName() + " just finished task\n");
             try {
                 net.send(task);         //sending
-                System.out.println("\nI succesfully sent the completed task though socket\n");
-                // Thread.sleep(3600 * 1000);
             } catch (IOException e) { e.printStackTrace(); }
         }
     }

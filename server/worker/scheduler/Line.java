@@ -10,9 +10,5 @@ public class Line {
     }
     public synchronized void setLine(Object line) {
         this.line = line;
-        if(line != null) {
-            // System.out.println("\nline became instance of " +
-            // line.getClass() + " in Line\n");
-        }
     }
 }

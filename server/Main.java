@@ -10,6 +10,6 @@ class Main {
         Server server = new Server(net, memory);
         server.setName("server");
         server.start();
-
+        
     }
 }

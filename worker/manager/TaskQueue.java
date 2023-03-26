@@ -1,10 +1,9 @@
 /*
  * This class has a Queue attribute, and methods that allow to 
- * modify and queue.
+ * modify the queue.
  */
 package worker.manager;
 
-import java.io.IOException;
 import java.util.*;
 import worker.Network;
 

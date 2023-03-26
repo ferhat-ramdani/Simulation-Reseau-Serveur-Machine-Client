@@ -8,7 +8,7 @@
   des nombres</a>. Pour ce faire, on commence par créer deux serveurs, un pour les _workers_ et un autre pour les clients. Une fois la connexion entre 
   serveur et worker établie, le serveur envoi des tâches sous forme d'intervalles au <i> worker</i>, celui-ci à recéption de la tâche calcule la 
   persistance des nombre se trouvant dans l'intervalle et renvoi les résultats au serveur. Le client peut interagir avec le serveur (client) et accéder
-  aux résultats calculés par les <i> workers </i>
+  aux résultats calculés par les <i>workers</i>.
 </p>
 
 # Implémentation

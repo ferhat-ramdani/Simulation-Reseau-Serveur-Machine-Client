@@ -23,7 +23,6 @@ public class Listener extends Thread {
     public void run() {
         try {
             while(true){
-                // System.out.println("\nReading in Listener : " + id + "\n");
                 Object object = net.receive(id);
                 System.out.println("\nRead instance of " +
                 object.getClass()+ " in Listener\n");
@@ -35,7 +34,6 @@ public class Listener extends Thread {
                     "successfully\n");
                     memory.storeInRAM(task);
                     line.setLine(null);
-                    // Thread.sleep(3600*1000);
                 }
             }
         } catch (ClassNotFoundException | IOException e) {
