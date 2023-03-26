@@ -17,10 +17,10 @@ import config.Cts;
 import server.memory.Memory;
 import server.worker.scheduler.*;
 
-public class Server extends Thread {
+public class WorkerServer extends Thread {
     private Network net;
     private Memory memory;
-    public Server(Network net, Memory memory) {
+    public WorkerServer(Network net, Memory memory) {
         this.net = net;
         this.memory = memory;
     }

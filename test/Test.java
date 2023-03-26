@@ -11,12 +11,20 @@ class Test {
 
         Test t = new Test();
 
-        try {
-            InetAddress ip = InetAddress.getLocalHost();
-            String hostname = ip.getHostName();
-            System.out.println("Hostname: " + hostname);
-        } catch (Exception e) {
-            e.printStackTrace();
+        String fruit = "apple";
+        switch (fruit) {
+            case "apple":
+                System.out.println("This is an apple.");
+                break;
+            case "banana":
+                System.out.println("This is a banana.");
+                break;
+            case "orange":
+                System.out.println("This is an orange.");
+                break;
+            default:
+                System.out.println("This is not a valid fruit.");
+                break;
         }
 
     }

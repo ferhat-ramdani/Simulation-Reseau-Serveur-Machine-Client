@@ -1,4 +1,5 @@
 package server;
+import server.client.ClientServer;
 import server.memory.Memory;
 import server.worker.net.*;
 
@@ -7,9 +8,14 @@ class Main {
 
         Network net = new Network();
         Memory memory = new Memory();
-        Server server = new Server(net, memory);
-        server.setName("server");
-        server.start();
+        WorkerServer workerServer = new WorkerServer(net, memory);
+        workerServer.setName("worker-server");
+        workerServer.start();
+
+        ClientServer clientServer = new ClientServer(memory);
+        clientServer.setName("clientServer");
+        clientServer.start();
+        
         
     }
 }
