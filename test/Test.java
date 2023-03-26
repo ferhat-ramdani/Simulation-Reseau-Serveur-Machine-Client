@@ -1,4 +1,7 @@
 import java.util.*;
+
+import worker.manager.CompletedTask;
+
 import java.io.*;
 import java.net.*;
 
@@ -8,27 +11,47 @@ class Test {
 
         Test t = new Test();
 
-        Hashtable<String, Integer> data = new Hashtable<>();
-        data.put("322", 48);
-        data.put("100", 1);
-        data.put("8937", 2);
+        Hashtable hash = new Hashtable<>();
+        hash.put("98739874794", 736);
+        hash.put("98734", 390);
 
-        ObjectOutputStream writer = new ObjectOutputStream(new FileOutputStream("disk.dat"));
-        ObjectInputStream reader = new ObjectInputStream(new FileInputStream("disk.dat"));
+        int[] j = new int[] {3,4};
+        ArrayList<Integer> i = new ArrayList<>();
+        i.add(63);
+        i.add(298763);
 
-        writer.writeObject(data);
+        t.print(i);
 
-        Hashtable<String, Integer> data2 = (Hashtable<String, Integer>) reader.readObject();
-
-        t.print(data2);
-
-        writer.close();
-    
     }
 
 
 
     void print(Object obj) {
         System.out.println(obj + "\n");
+    }
+
+    static String incrementNumber(String number) {
+        int index = number.length() - 1;
+        while(index >= 0 && (number.charAt(index) == '9')) {
+            number = replaceChar(number, index, '0');
+            index--;
+        }
+        if(index >= 0) {
+            number = replaceChar(number, index, (char) (number.charAt(index) + 1));
+        } else {
+            number = "1" + number;
+        }
+        return number;
+    }
+
+    static String replaceChar(String str, int index, char c) {
+        return str.substring(0, index) + c + str.substring(index + 1);
+    }
+
+    public static String addIntervalToString(String number, String range) {        // "987398263" + 10000 = "987408263"
+        int zerosInRange = range.length() - 1;
+        String result = incrementNumber(number.substring(0, number.length()-zerosInRange));
+        result += number.substring(number.length() - zerosInRange);
+        return result;
     }
 }

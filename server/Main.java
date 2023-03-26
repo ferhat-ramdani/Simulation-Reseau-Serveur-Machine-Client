@@ -1,48 +1,15 @@
-/**
-    Architecure : 
-    class CompletedTask
-    class QueueManager
-    class Network
-    class MemoryManager
-    package worker-server
-    package client-server
-    class CommandsManager
-
- */
 package server;
+import server.memory.Memory;
 import server.worker.net.*;
-import java.util.*;
-
-import config.Cts;
 
 class Main {
-    public static void main(String[] args){
+    public static void main(String[] args) throws InterruptedException{
 
         Network net = new Network();
-        net.launchManagers();
+        Memory memory = new Memory();
+        Server server = new Server(net, memory);
+        server.setName("server");
+        server.start();
 
-
-
-
-
-
-
-
-
-
-
-
-
-        
-        //manage the tasks in the queue
-            //create the queue
-            //wait for a connection, and retrieve information about machine capacity
-            //send the proper amout of tasks to worker
-            //periodicly check upon the progress of a worker
-        
-        
-        //manage tasks recieved from worker
-            //listen to worker through socket
-            //manage the retrieved task in memory
     }
 }

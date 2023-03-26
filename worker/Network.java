@@ -1,38 +1,36 @@
+/*
+ * This class creates the two completed sockets : socket and 
+ * progressSocket. It also has methods that allow to send and 
+ * recieve objects from and to the server
+ */
 package worker;
 
 import java.net.*;
-import java.util.*;
 import java.io.*;
 import config.Cts;
-import worker.manager.*;
 
 public class Network {
 
-    private Socket s;
-    private ObjectOutputStream obSender;
-    private ObjectInputStream obReciever;
+    private Socket socket;
+    private ObjectOutputStream sender;
+    private ObjectInputStream reciever;
 
     public Network() {
         try{
-            this.s = new Socket(Cts.HOST_NAME, Cts.PORT1);
-            this.obSender = new ObjectOutputStream(s.getOutputStream());
-            this.obReciever = new ObjectInputStream(s.getInputStream());
+            System.out.println("\nCompleting the socket : " + Cts.PORT1);
+            this.socket = new Socket(Cts.HOST_NAME, Cts.PORT1);
+            this.sender = new ObjectOutputStream(socket.getOutputStream());
+            this.reciever = new ObjectInputStream(socket.getInputStream());
+            System.out.println("\nSending max tasks in Network Constructor\n");
+            sender.writeObject(Cts.NB_CORES);       //sending
         } catch (IOException e) {e.printStackTrace();}
     }
 
-    public void sendObject(Object ob) {
-        try{
-            obSender.writeObject(ob);
-        } catch (IOException e) {e.printStackTrace();}
+    public synchronized void send(Object ob) throws IOException{
+        sender.writeObject(ob);         //sending
     }
 
-    public Object recieveObject() {
-        try{
-            return obReciever.readObject();         //reading
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            return -1;
-        }
+    public synchronized Object recieve() throws ClassNotFoundException, IOException {
+        return reciever.readObject();         //reading
     }
 }

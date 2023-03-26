@@ -1,8 +1,12 @@
+/*
+ * This is a utilitary class that has raw methods to manipulate 
+ * arithmetic operations between integers and strings
+ */
 package worker.computer;
 
 public class Calculator {
 
-    private String multiplyStringByDigit(String number, int d) {
+    private static String multiplyStringByDigit(String number, int d) {
         String res = "";
         int tmp = 0;
         for(int i = number.length()-1; i >= 0; i--) {
@@ -14,7 +18,7 @@ public class Calculator {
         return res;
     }
 
-    private String multiplyDigitsOf(String number) {
+    private static String multiplyDigitsOf(String number) {
         String res = "1";
         if(number.contains("0")){
             res = "0";
@@ -26,9 +30,8 @@ public class Calculator {
         return res;
     }
 
-    public int calculatePersistanceOf(String number) {
+    public static int calculatePersistanceOf(String number) {
         int p = 0;
-        System.out.print("\ninitial number : " + number + "\n");
         while(number.length() > 1) {
             number = multiplyDigitsOf(number);
             p++;
@@ -36,7 +39,7 @@ public class Calculator {
         return p;
     }
 
-    public String incrementNumber(String number) {
+    public static String incrementNumber(String number) {
         int index = number.length() - 1;
         while(index >= 0 && (number.charAt(index) == '9')) {
             number = replaceChar(number, index, '0');
@@ -50,9 +53,15 @@ public class Calculator {
         return number;
     }
 
-    public String replaceChar(String str, int index, char c) {
+    private static String replaceChar(String str, int index, char c) {
         return str.substring(0, index) + c + str.substring(index + 1);
     }
 
+    public static String addIntervalToString(String number, String range) {        // "987398263" + 10000 = "987408263"
+        int zerosInRange = range.length() - 1;
+        String result = incrementNumber(number.substring(0, number.length()-zerosInRange));
+        result += number.substring(number.length() - zerosInRange);
+        return result;
+    }
 }
 

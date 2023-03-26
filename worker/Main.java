@@ -1,23 +1,29 @@
+/*
+ * Creates a socket, completes it, than immediately (in constructor)
+ * sends max number of tasks
+ */
 package worker;
-import worker.computer.*;
-import worker.Network;
+import java.io.IOException;
+
 import config.Cts;
+import worker.computer.Peasant;
 import worker.manager.*;
 
 class Main {
-    public static void main(String[] args) {
-        
-        //connect to server
+    public static void main(String[] args) throws ClassNotFoundException, IOException, InterruptedException {
+
         Network net = new Network();
-        //create queue
-        TaskQueue taskQueue = new TaskQueue();
-        //launch task manager
-        TaskManager tm = new TaskManager(net, taskQueue);
-        tm.recieveTasks();
-        //launch peasants
-        PeasantManager pm = new PeasantManager(taskQueue, net);
-        pm.launchPeasants();
 
+        TaskQueue taskQueue = new TaskQueue(net);
+        Peasant[] peasants = new Peasant[Cts.NB_CORES];
+        for(int i = 0; i < Cts.NB_CORES; i++) {
+            peasants[i] = new Peasant(taskQueue, i, net);
+            peasants[i].setName("peasant" + i);
+            peasants[i].start();
+        }
+
+        TaskManager taskManager = new TaskManager(taskQueue, net, peasants);
+        taskManager.setName("taskManager");
+        taskManager.start();
     }
-
 }

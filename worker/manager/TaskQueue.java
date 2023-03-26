@@ -1,23 +1,47 @@
+/*
+ * This class has a Queue attribute, and methods that allow to 
+ * modify and queue.
+ */
 package worker.manager;
 
+import java.io.IOException;
 import java.util.*;
+import worker.Network;
 
 public class TaskQueue {
-    private Queue<String[]> taskQueue;
+    private Queue<String[]> queue;
+    private Network net;
 
-    public TaskQueue() {
-        this.taskQueue = new LinkedList<>();
+    public TaskQueue(Network net) {
+        this.net = net;
+        this.queue = new LinkedList<>();
     }
 
-    public void addTask(String[] task) {
-        taskQueue.add(task);
+    public synchronized void addTask(String[] task) {
+        queue.add(task);
+        this.notifyAll();
     }
 
     public synchronized String[] getTask() {
-        return taskQueue.poll();
+        while(this.isEmpty()){
+            try {
+                // System.out.println("\nPeasant waiting ...\n");
+                this.wait();
+                // System.out.println("\nJust recieved notify, no more waiting !\n");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        // System.out.println("\nreturning range ! \n");
+        return queue.poll();
     }
 
     public Boolean isEmpty() {
-        return taskQueue.isEmpty();
+        return queue.isEmpty();
     }
+
+    public int getAvailableTasks() {
+        return queue.size();
+    }
+
 }

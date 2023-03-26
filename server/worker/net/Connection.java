@@ -1,3 +1,11 @@
+/**
+ * This class is composed of two completed sockets : socket and 
+ * progressSocket.
+ * For every socket, it has sender and reciever object.
+ * We also have an ID
+ * It also has methods send tasks, recieve completed tasks, send
+ * requests for progress and recieve updates on progress
+ */
 package server.worker.net;
 import java.net.*;
 import java.util.*;
@@ -5,46 +13,32 @@ import java.io.*;
 
 public class Connection {
     private int id;
-    private Socket news;
-    private Socket tasks;
-    private ObjectOutputStream taskSender;
-    private ObjectInputStream taskReciever;
-    private ObjectOutputStream newsSender;
-    private ObjectInputStream newsReciever;
-    private final int MAX_TASKS;
+    private Socket socket;
+    private ObjectOutputStream sender;
+    private ObjectInputStream reciever;
     private ArrayList<int[]> peasantsProgress;
-    public Connection(int id, Socket s, ObjectOutputStream obSender, ObjectInputStream obReciever, String type) {
+    private int maxTasks;
+    public Connection(int id, Socket socket, ObjectOutputStream obSender, ObjectInputStream obReciever, int maxTasks) {
         this.id = id;
-        if(type.equals("tasks")){
-            this.taskSender = obSender;
-            this.taskReciever = obReciever;
-            this.tasks = s;
-        } else if(type.equals("news")){
-            this.newsSender = obSender;
-            this.newsReciever = obReciever;
-            this.news = s;
-        }
-        this.MAX_TASKS = 0;
+        this.sender = obSender;
+        this.reciever = obReciever;
+        this.socket = socket;
+        this.maxTasks = maxTasks;
+        System.out.println("\nConnection created, id : " + id + "\n");
     }
-    public int getId() {
+    public synchronized int getId() {
         return id;
     }
-    public void setTasks(Socket tasks){
-        this.tasks = tasks;
+    public synchronized void setSocket(Socket socket){
+        this.socket = socket;
     }
     public ArrayList<int[]> getPeasantProgress() {
         return peasantsProgress;
     }
-    public ObjectOutputStream getTaskSender() {
-        return taskSender;
+    public synchronized ObjectOutputStream getSender() {
+        return sender;
     }
-    public ObjectInputStream getTaskReciever() {
-        return taskReciever;
-    }
-    public ObjectOutputStream getNewsSender() {
-        return newsSender;
-    }
-    public ObjectInputStream getNewsReciever() {
-        return newsReciever;
+    public synchronized ObjectInputStream getReciever() {
+        return reciever;
     }
 }
