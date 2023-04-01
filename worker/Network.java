@@ -17,7 +17,7 @@ public class Network {
 
     public Network() {
         try{
-            System.out.println("\nCompleting the socket : " + Cts.PORT1);
+            // System.out.println("\nCompleting the socket : " + Cts.PORT1);
             this.socket = new Socket(Cts.HOST_NAME, Cts.PORT1);
             this.sender = new ObjectOutputStream(socket.getOutputStream());
             this.reciever = new ObjectInputStream(socket.getInputStream());

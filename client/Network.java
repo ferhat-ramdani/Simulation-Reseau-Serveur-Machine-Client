@@ -14,11 +14,11 @@ public class Network {
 
     public Network() {
         try{
-            System.out.println("\nCompleting the socket : " + Cts.PORT2);
+            // System.out.println("\nCompleting the socket : " + Cts.PORT2);
             this.socket = new Socket(Cts.HOST_NAME, Cts.PORT2);
             this.sender = new ObjectOutputStream(socket.getOutputStream());
             this.reciever = new ObjectInputStream(socket.getInputStream());
-            System.out.println("\nSocket complete, sender and reciever ready\n");
+            // System.out.println("\nSocket complete, sender and reciever ready\n");
         } catch (IOException e) {e.printStackTrace();}
     }
 

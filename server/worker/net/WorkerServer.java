@@ -1,10 +1,9 @@
 /*
- * This is a thread class creates a server, than creates a completed socket,
- * after that, it reads an ID from corresponding worker, it checks if connection 
- * with same ID exists in ArrayList of connections, in which case it completes it,
- * otherwise, it creates a new connection.
+ * This is a thread class that creates a server, than creates a completed socket,
+ * after that, it checks if connection with same ID exists in ArrayList of connections, 
+ * in which case it completes it, otherwise, it creates a new connection.
  * If connection exists already (corresponding connection complete), it sends a task, 
- * and executes the scheduler every 10s.
+ * and executes the scheduler every 5s.
  */
 package server.worker.net;
 
@@ -43,7 +42,7 @@ public class WorkerServer extends Thread {
                 Line line = new Line();
                 TimerTask scheduler = new Scheduler(id, net, line);
                 Timer timer = new Timer();
-                timer.scheduleAtFixedRate(scheduler, 0, 15*1000);
+                timer.scheduleAtFixedRate(scheduler, 0, 200);
                 Listener listener = new Listener(id, net, memory, line);
                 listener.start();
                 id++;

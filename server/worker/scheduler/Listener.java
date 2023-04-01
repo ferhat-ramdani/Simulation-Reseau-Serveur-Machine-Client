@@ -24,14 +24,14 @@ public class Listener extends Thread {
         try {
             while(true){
                 Object object = net.receive(id);
-                System.out.println("\nRead instance of " +
-                object.getClass()+ " in Listener\n");
+                // System.out.println("\nRead instance of " +
+                // object.getClass()+ " in Listener\n");
                 line.setLine(object);            //reading
                 if(line.getLine() instanceof CompletedTask) {
                     CompletedTask task = (CompletedTask) line.getLine();
-                    System.out.println("\nRead Completed Task " + 
-                    Arrays.toString(task.getRange()) + " in Listener " + 
-                    "successfully\n");
+                    // System.out.println("\nRead Completed Task " + 
+                    // Arrays.toString(task.getRange()) + " in Listener " + 
+                    // "successfully\n");
                     memory.storeInRAM(task);
                     line.setLine(null);
                 }

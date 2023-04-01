@@ -12,8 +12,7 @@ public class TaskGenerator {
     public static String[] createTask() {
         return (new String[] {
             lowerBound, 
-            lowerBound = Calculator.addIntervalToString(lowerBound, Cts.INTERVAL_SIZE), 
-            Cts.INTERVAL_SIZE
+            lowerBound = Calculator.addIntervalToString(lowerBound, Cts.INTERVAL_SIZE)
         });
     }
 }

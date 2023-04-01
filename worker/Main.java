@@ -14,16 +14,15 @@ class Main {
 
         Network net = new Network();
 
-        TaskQueue taskQueue = new TaskQueue(net);
+        TaskQueue taskQueue = new TaskQueue();
         Peasant[] peasants = new Peasant[Cts.NB_CORES];
         for(int i = 0; i < Cts.NB_CORES; i++) {
             peasants[i] = new Peasant(taskQueue, i, net);
-            peasants[i].setName("peasant" + i);
+            peasants[i].setName("peasant_" + i);
             peasants[i].start();
         }
 
         TaskManager taskManager = new TaskManager(taskQueue, net, peasants);
-        taskManager.setName("taskManager");
-        taskManager.start();
+        taskManager.listen();
     }
 }

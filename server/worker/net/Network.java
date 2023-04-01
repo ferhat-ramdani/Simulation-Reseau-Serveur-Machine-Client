@@ -16,7 +16,7 @@ public class Network {
     public void send(int connectionID, Object object) throws IOException, ClassNotFoundException {
         for (Connection connection : connections) {
             if(connection.getId() == connectionID) {
-                // System.out.print("\nSeding " + object + " to " + connectionID + " in Network\n");
+                // System.out.print("\nSending " + object + " to " + connectionID + " in Network\n");
                 connection.getSender().writeObject(object);         //sending
             }
         }
@@ -25,7 +25,7 @@ public class Network {
     public Object receive(int connectionID) throws IOException, ClassNotFoundException {
         for (Connection connection : connections) {
             // System.out.println("\nThere is a connection in connections of id : " +
-            // connection.getId() + "\n found in Network receive method");
+            // connection.getId() + "\n found in Network receive method\n");
             if(connection.getId() == connectionID) {
                 // System.out.print("\nReading from " + connectionID + " in Network\n");
                 return connection.getReciever().readObject();         //reading

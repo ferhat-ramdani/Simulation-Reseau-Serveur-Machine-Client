@@ -24,14 +24,16 @@ public class Scheduler extends TimerTask{
 
     public void run() {
         try {
-            System.out.println("\n__________________________\n");
+            // System.out.println("\n__________________________\n");
             net.send(id, "PROGRESS");        //sending
             while(!(line.getLine() instanceof ArrayList)) {}
             ArrayList<Integer> progress = (ArrayList<Integer>) line.getLine();
+            // System.out.println("\nRecieved progress : " + progress.toString() + "\n");
             line.setLine(null);
             net.send(id, "TASKS IN QUEUE");        //sending
             while(!(line.getLine() instanceof Integer)) {}
             int nbOfTasksInQueue = (int) line.getLine();
+            // System.out.println("\nRecieved tasks in queue : " + nbOfTasksInQueue + "\n");
             int neededTasks = 0;
             for(int p : progress) {
                 if(p > 80 | p < 0) {
@@ -39,6 +41,7 @@ public class Scheduler extends TimerTask{
                 }
             }
             neededTasks -= nbOfTasksInQueue;
+            // System.out.println("\nNeeded tasks : " + neededTasks + "\n");
             while(neededTasks > 0) {
                 net.send(id, TaskGenerator.createTask());        //sending
                 neededTasks--;

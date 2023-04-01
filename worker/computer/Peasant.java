@@ -10,6 +10,7 @@ import worker.manager.*;
 
 import java.io.IOException;
 
+import config.Cts;
 import worker.Network;
 public class Peasant extends Thread {
 
@@ -22,7 +23,7 @@ public class Peasant extends Thread {
 
     public Peasant(TaskQueue taskQueue, int id, Network net) {
         this.taskQueue = taskQueue;
-        this.range = new String[3];                // [a, b, length]
+        this.range = new String[2];                // [a, b, length]
         this.progress = -1;
         this.id = id;
         this.net = net;
@@ -38,21 +39,18 @@ public class Peasant extends Thread {
 
     public void run() {
         while(true){
+            // System.out.println("\n" + getName() +" getting task ...\n");
             range = taskQueue.getTask();
             task = new CompletedTask(range);
-            System.out.println("\nAbout to start" + getName()+ "\n" + 
-            "Range : [" + range[0] + " , " + range[1] + "] in " + id + "\n");
             String number = range[0];
-            for(int i = 0; i < Integer.parseInt(range[2]); i++) {
+            for(int i = 0; i < Integer.parseInt(Cts.INTERVAL_SIZE); i++) {
                 int p = Calculator.calculatePersistanceOf(number);
                 task.addNumber(number, p);
                 number = Calculator.incrementNumber(number);
-                progress = (int) ((i + 1) / Double.parseDouble(range[2]) * 100);
+                progress = (int) ((i + 1) / Double.parseDouble(Cts.INTERVAL_SIZE) * 100);
             }
-            System.out.print("\n" + getName() + " just finished task\n");
-            try {
-                net.send(task);         //sending
-            } catch (IOException e) { e.printStackTrace(); }
+            taskQueue.addDoneTask(task);
+            progress = -1;
         }
     }
 }
