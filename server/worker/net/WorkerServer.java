@@ -28,18 +28,11 @@ public class WorkerServer extends Thread {
         try{
         ServerSocket serverSocket = new ServerSocket(Cts.PORT1);
         while(true) {
-                // System.out.println("\nTrying to accept from Server\n");
                 Socket socket = serverSocket.accept();
-                // System.out.println("\nJust accepted new connection in Server\n");
                 ObjectOutputStream objectSender = new ObjectOutputStream(socket.getOutputStream());
                 ObjectInputStream objectReciever = new ObjectInputStream(socket.getInputStream());
-                // System.out.println("\nJust created sender and reciever in Server\n");
-                // System.out.println("\nReading maxTasks\n");
-                int maxTasks = (int) objectReciever.readObject();       //reading
-                // System.out.println("\nJust read maxTasks : " + maxTasks + " in Server\n");
-                net.getConnections().add(new Connection(id, socket, objectSender, objectReciever, maxTasks));
-                // System.out.println("\nLaunching scheduler\n");
-                Line line = new Line();
+                net.getConnections().add(new Connection(id, socket, objectSender, objectReciever));
+                Data line = new Data();
                 TimerTask scheduler = new Scheduler(id, net, line);
                 Timer timer = new Timer();
                 timer.scheduleAtFixedRate(scheduler, 0, 200);
@@ -47,6 +40,6 @@ public class WorkerServer extends Thread {
                 listener.start();
                 id++;
             }
-        } catch (IOException | ClassNotFoundException e) {e.printStackTrace();}
+        } catch (IOException e) {e.printStackTrace();}
     }
 }

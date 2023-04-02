@@ -8,9 +8,8 @@ package worker.computer;
 
 import worker.manager.*;
 
-import java.io.IOException;
-
 import config.Cts;
+import worker.Main;
 import worker.Network;
 public class Peasant extends Thread {
 
@@ -19,14 +18,12 @@ public class Peasant extends Thread {
     private int progress;
     private TaskQueue taskQueue;
     private CompletedTask task;
-    private Network net;
 
-    public Peasant(TaskQueue taskQueue, int id, Network net) {
+    public Peasant(TaskQueue taskQueue, int id) {
         this.taskQueue = taskQueue;
-        this.range = new String[2];                // [a, b, length]
+        this.range = new String[2];                // [a, b]
         this.progress = -1;
         this.id = id;
-        this.net = net;
     }
 
     public int getProgress() {
@@ -38,8 +35,7 @@ public class Peasant extends Thread {
     }
 
     public void run() {
-        while(true){
-            // System.out.println("\n" + getName() +" getting task ...\n");
+        while(!Main.off){
             range = taskQueue.getTask();
             task = new CompletedTask(range);
             String number = range[0];

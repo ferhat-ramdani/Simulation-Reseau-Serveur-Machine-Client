@@ -1,7 +1,6 @@
 package server.worker.scheduler;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 import server.memory.Memory;
 import server.worker.net.Network;
@@ -11,10 +10,10 @@ public class Listener extends Thread {
     private Network net;
     private Memory memory;
     private int id;
-    private Line line;
+    private Data line;
     
 
-    public Listener(int id, Network net, Memory memory, Line line) {
+    public Listener(int id, Network net, Memory memory, Data line) {
         this.id = id;
         this.net = net;
         this.memory = memory;
@@ -24,16 +23,16 @@ public class Listener extends Thread {
         try {
             while(true){
                 Object object = net.receive(id);
-                // System.out.println("\nRead instance of " +
-                // object.getClass()+ " in Listener\n");
-                line.setLine(object);            //reading
-                if(line.getLine() instanceof CompletedTask) {
-                    CompletedTask task = (CompletedTask) line.getLine();
-                    // System.out.println("\nRead Completed Task " + 
-                    // Arrays.toString(task.getRange()) + " in Listener " + 
-                    // "successfully\n");
+                line.setData(object);
+                if(line.getData() instanceof CompletedTask) {
+                    CompletedTask task = (CompletedTask) line.getData();
                     memory.storeInRAM(task);
-                    line.setLine(null);
+                    line.setData(null);
+                } else if(line.getData() instanceof Boolean) {
+                    System.out.println("\nRecieved End from worker\n");
+                    net.getConnection(id).closeConnection();
+                    net.deleteConnection(id);
+                    break;
                 }
             }
         } catch (ClassNotFoundException | IOException e) {

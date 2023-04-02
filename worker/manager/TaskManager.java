@@ -4,8 +4,9 @@ package worker.manager;
 import java.io.IOException;
 import java.util.*;
 
-import worker.Network;
+import config.G;
 import worker.computer.Peasant;
+import worker.*;
 
 public class TaskManager {
     private TaskQueue taskQueue;
@@ -21,10 +22,9 @@ public class TaskManager {
         Runnable listenable = new Runnable() {
             @Override
             public void run() {
-                while(true){
+                while(!Main.off){
                     try {
-                        Object receivedObject = net.recieve();            //reading
-                        // System.out.println("The read object is : " + receivedObject + " in TaskManager");
+                        Object receivedObject = net.recieve();
                         if(receivedObject instanceof String[]) {
                             String[] task = (String[]) receivedObject;     
                             taskQueue.addTask(task);
@@ -40,10 +40,9 @@ public class TaskManager {
         Runnable dispatchable = new Runnable() {
             @Override
             public void run() {
-                while(true){
+                while(!Main.off){
                     try {
                         net.send(taskQueue.getDoneTask());
-                        // System.out.println("\nDone sending doneTask");
                     } catch (IOException e) { e.printStackTrace();}
                 }
             }
@@ -52,12 +51,8 @@ public class TaskManager {
         Runnable displayable = new Runnable() {
             @Override
             public void run() {
-                // try {
-                //     Thread.sleep(10 * 1000);
-                // } catch (InterruptedException e) { e.printStackTrace();}
-                while(true){
-                    System.out.print("\033[H\033[2J");
-                    System.out.flush();
+                while(!Main.off){
+                    G.clearScreen();
                     System.out.println("\n______________Tasks_____________\n");
                     for (String[] task : taskQueue.getTasks()) {
                         System.out.println(Arrays.toString(task));
@@ -71,7 +66,7 @@ public class TaskManager {
                         System.out.println(Arrays.toString(doneTask.getRange()));
                     }
                     try {
-                        Thread.sleep(200);
+                        Thread.sleep(1000);
                     } catch (InterruptedException e) { e.printStackTrace();}
                 }
             }
@@ -85,22 +80,6 @@ public class TaskManager {
         displayer.start();
     }
 
-    // public void run() {
-    //     while(true){
-    //         try {
-    //             Object receivedObject = net.recieve();            //reading
-    //             // System.out.println("The read object is : " + receivedObject + " in TaskManager");
-    //             if(receivedObject instanceof String[]) {
-    //                 String[] task = (String[]) receivedObject;     
-    //                 taskQueue.addTask(task);
-    //             } else if(receivedObject instanceof String) {
-    //                 String request = (String) receivedObject;
-    //                 processor(request);
-    //             }
-    //         } catch (ClassNotFoundException | IOException e) { e.printStackTrace();}          
-    //     }
-    // }
-
     private void processor(String request) throws IOException {
         switch (request) {
             case "PROGRESS":
@@ -108,15 +87,11 @@ public class TaskManager {
                 for(Peasant peasant : peasants) {
                     progress.add(peasant.getProgress());
                 }
-                // System.out.println("\nSending PROGRESS ...\n");
-                net.send(progress);         //sending
-                // System.out.println("\nPROGRESS sent\n");
+                net.send(progress);
                 break;
                 
             case "TASKS IN QUEUE":
-                // System.out.println("\nSending TASKS IN QUEUE ...\n");
                 net.send(taskQueue.getAvailableTasks());
-                // System.out.println("\nTASKS IN QUEUE sent\n");
                 break;
         
             default:

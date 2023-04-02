@@ -14,19 +14,17 @@ public class Network {
 
     public Network() {
         try{
-            // System.out.println("\nCompleting the socket : " + Cts.PORT2);
             this.socket = new Socket(Cts.HOST_NAME, Cts.PORT2);
             this.sender = new ObjectOutputStream(socket.getOutputStream());
             this.reciever = new ObjectInputStream(socket.getInputStream());
-            // System.out.println("\nSocket complete, sender and reciever ready\n");
         } catch (IOException e) {e.printStackTrace();}
     }
 
     public synchronized void send(Object ob) throws IOException{
-        sender.writeObject(ob);         //sending
+        sender.writeObject(ob);
     }
 
     public synchronized Object recieve() throws ClassNotFoundException, IOException {
-        return reciever.readObject();         //reading
+        return reciever.readObject();
     }
 }

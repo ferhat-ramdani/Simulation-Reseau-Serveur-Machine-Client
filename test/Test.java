@@ -13,18 +13,14 @@ class Test {
 
         Test t = new Test();
 
-        String[] range = new String[] {"1000000000000000000", "2000000000000000000"};
-        String number = range[0];
-        CompletedTask task = new CompletedTask(range);
-        for(int i = 0; i < Integer.parseInt(Cts.INTERVAL_SIZE); i++) {
-            int p = Calculator.calculatePersistanceOf(number);
-            task.addNumber(number, p);
-            number = Calculator.incrementNumber(number);
-            int progress = (int) ((i + 1) / Double.parseDouble(Cts.INTERVAL_SIZE) * 100);
-            t.print(progress);
-            // System.out.print("\033[H\033[2J");
-            // System.out.flush();
-        }
+        ObjectInputStream reader = new ObjectInputStream(
+            new FileInputStream("server/memory/database/task_" +
+            1 + ".dat")
+        );
+
+        CompletedTask task = (CompletedTask) reader.readObject();
+
+        t.print(task.getData().containsKey("10000000"));
 
     }
 

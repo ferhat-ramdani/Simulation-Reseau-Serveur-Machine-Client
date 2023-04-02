@@ -14,9 +14,9 @@ import server.worker.net.Network;
 public class Scheduler extends TimerTask{
     private int id;
     private Network net;
-    private Line line;
+    private Data line;
 
-    public Scheduler(int id, Network net, Line line) {
+    public Scheduler(int id, Network net, Data line) {
         this.id = id;
         this.net = net;
         this.line = line;
@@ -24,16 +24,13 @@ public class Scheduler extends TimerTask{
 
     public void run() {
         try {
-            // System.out.println("\n__________________________\n");
-            net.send(id, "PROGRESS");        //sending
-            while(!(line.getLine() instanceof ArrayList)) {}
-            ArrayList<Integer> progress = (ArrayList<Integer>) line.getLine();
-            // System.out.println("\nRecieved progress : " + progress.toString() + "\n");
-            line.setLine(null);
-            net.send(id, "TASKS IN QUEUE");        //sending
-            while(!(line.getLine() instanceof Integer)) {}
-            int nbOfTasksInQueue = (int) line.getLine();
-            // System.out.println("\nRecieved tasks in queue : " + nbOfTasksInQueue + "\n");
+            net.send(id, "PROGRESS");
+            while(!(line.getData() instanceof ArrayList)) {}
+            ArrayList<Integer> progress = (ArrayList<Integer>) line.getData();
+            line.setData(null);
+            net.send(id, "TASKS IN QUEUE");
+            while(!(line.getData() instanceof Integer)) {}
+            int nbOfTasksInQueue = (int) line.getData();
             int neededTasks = 0;
             for(int p : progress) {
                 if(p > 80 | p < 0) {
@@ -41,9 +38,8 @@ public class Scheduler extends TimerTask{
                 }
             }
             neededTasks -= nbOfTasksInQueue;
-            // System.out.println("\nNeeded tasks : " + neededTasks + "\n");
             while(neededTasks > 0) {
-                net.send(id, TaskGenerator.createTask());        //sending
+                net.send(id, TaskGenerator.createTask());
                 neededTasks--;
             }
         } catch (ClassNotFoundException | IOException e) {

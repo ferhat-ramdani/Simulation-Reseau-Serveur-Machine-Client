@@ -3,20 +3,24 @@ package server.memory;
 import java.io.*;
 import java.util.*;
 
+import config.Cts;
+import config.G;
 import worker.manager.CompletedTask;
 
 public class Memory {
     
     private int id;
+    private int doneTasks;
     private CompletedTask[] pages;
     private ObjectOutputStream writer;
     private ObjectInputStream reader;
     private Hashtable<Integer, String[]> register;
     
     public Memory() {
-        this.pages = new CompletedTask[3];
+        this.pages = new CompletedTask[Cts.PAGES];
         this.register = new Hashtable<>();
         this.id = 1;
+        this.doneTasks = 1;
     }
     
     public synchronized void storeInDisk(CompletedTask task) throws FileNotFoundException, IOException {
@@ -24,8 +28,6 @@ public class Memory {
         writer.writeObject(task);
         writer.close();
         register.put(id, task.getRange());
-        // System.out.println("\nCreated task_" + id + ".dat with range " +
-        // Arrays.toString(task.getRange()) + "\n");
         id++;
     }
 
@@ -37,15 +39,14 @@ public class Memory {
     }
 
     public synchronized void storeInRAM(CompletedTask task) throws FileNotFoundException, IOException {
-        // System.out.println("\nRecieved task : " + Arrays.toString(task.getRange()) +
-        // "\n trying to put in task_" + id + ".dat In storeInRAM\n");
-        if(pages[1] != null) storeInDisk(pages[1]);
-        pages[1] = pages[0];
+        if(pages[Cts.PAGES - 2] != null) storeInDisk(pages[Cts.PAGES - 2]);
+
+        for (int i = Cts.PAGES - 3; i >= 0; i--) {
+            pages[i+1] = pages[i];
+        }
         pages[0] = task;
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
-        printPages();
-        printFiles();
+        showPages();
+        doneTasks++;
     }
 
     public int getId() {
@@ -61,8 +62,8 @@ public class Memory {
     }
 
     private void printPages() {
-        System.out.println("\n________Pages________\n");
-        for(int i = 1; i <= 3; i++){
+        System.out.println("\n____________Pages__________\n");
+        for(int i = 1; i <= Cts.PAGES; i++){
             if(pages[i-1] != null){
                 System.out.println("Page " + i + " : " + Arrays.toString(pages[i-1].getRange()) + "\n");
             } else {
@@ -71,10 +72,24 @@ public class Memory {
         }
     }
     private void printFiles() {
-        System.out.println("\n________Files________\n");
+        System.out.println("\n____________Files___________\n");
+        int i = 0;
         for (Map.Entry<Integer, String[]> entry : register.entrySet()) {
-            System.out.println(entry.getKey() + " => " + Arrays.toString(entry.getValue()));
+            if(i<10) {
+                System.out.println(entry.getKey() + " => " + Arrays.toString(entry.getValue()));
+                i++;
+            }
         }
+    }
+
+    public void showPages() {
+        G.clearScreen();
+        printPages();
+        printFiles();
+    }
+
+    public int getDoneTasks() {
+        return doneTasks;
     }
 
 }

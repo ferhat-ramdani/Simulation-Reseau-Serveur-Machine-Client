@@ -1,14 +1,14 @@
 package server.worker.scheduler;
 
-public class Line {
+public class Data {
     private Object line;
-    public Line() {
+    public Data() {
         this.line = null;
     }
-    public synchronized Object getLine() {
+    public synchronized Object getData() {
         return line;
     }
-    public synchronized void setLine(Object line) {
+    public synchronized void setData(Object line) {
         this.line = line;
     }
 }

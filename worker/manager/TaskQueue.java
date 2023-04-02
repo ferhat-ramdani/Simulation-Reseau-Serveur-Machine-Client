@@ -28,28 +28,22 @@ public class TaskQueue {
     public synchronized String[] getTask() {
         while(tasks.isEmpty()){
             try {
-                // System.out.println("\nPeasant waiting ...\n");
                 this.wait();
-                // System.out.println("\nJust recieved notify, no more waiting !\n");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-        // System.out.println("\nreturning range ! \n");
         return tasks.poll();
     }
 
     public synchronized CompletedTask getDoneTask() {
         while(doneTasks.isEmpty()){
             try {
-                // System.out.println("\nPeasant waiting ...\n");
                 this.wait();
-                // System.out.println("\nJust recieved notify, no more waiting !\n");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-        System.out.println("\nNotified and returning doneTask ...\n");
         return doneTasks.poll();
     }
 

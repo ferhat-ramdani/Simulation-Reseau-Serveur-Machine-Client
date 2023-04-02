@@ -87,7 +87,8 @@ public class Calculator {
     }
 
     public static Boolean inRange(String a, String b, String number) {
-        if( compare(number, a) == 1 && compare(b, number) == 1) {
+        if( (compare(number, a) == 1 || compare(number, a) == 0) &&
+        (compare(b, number) == 1 || compare(b, number) == 1)) {
             return true;
         }
         return false;
