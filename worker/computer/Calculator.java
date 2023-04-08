@@ -63,5 +63,36 @@ public class Calculator {
         result += number.substring(number.length() - zerosInRange);
         return result;
     }
+
+    private static int compare(String  a, String  b) {
+        //true : a>b
+        int result = 0;
+        if(a.length() > b.length()) {
+            result = 1;
+        } else if(a.length() < b.length()){
+            result = -1;
+        } else {
+            int n = a.length();
+            for(int i = 0; i <= n - 1; i++) {
+                if(a.charAt(i) - '0' > b.charAt(i) - '0' ) {
+                    result = 1;
+                    break;
+                } else if(a.charAt(i) - '0' < b.charAt(i) - '0'){
+                    result = -1;
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
+    public static Boolean inRange(String a, String b, String number) {
+        if( (compare(number, a) == 1 || compare(number, a) == 0) &&
+        (compare(b, number) == 1 || compare(b, number) == 1)) {
+            return true;
+        }
+        return false;
+    }
+    
 }
 

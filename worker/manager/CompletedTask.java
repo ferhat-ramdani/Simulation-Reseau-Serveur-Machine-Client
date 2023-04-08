@@ -9,7 +9,7 @@ import java.util.Hashtable;
 
 public class CompletedTask implements Serializable{
     private String[] range;
-    private Hashtable data;
+    private Hashtable<String, Integer> data;
     public CompletedTask(String[] range) {
         this.range = range;
         this.data = new Hashtable<>();
@@ -17,10 +17,13 @@ public class CompletedTask implements Serializable{
     public void addNumber(String number, int persistance) {
         data.put(number, persistance);
     }
-    public Hashtable getData() {
+    public Hashtable<String, Integer> getData() {
         return data;
     }
     public String[] getRange() {
         return range;
+    }
+    public Boolean isEmpty() {
+        return data.isEmpty();
     }
 }

@@ -6,6 +6,7 @@
 package worker;
 
 import java.net.*;
+import java.util.Scanner;
 import java.io.*;
 import config.Cts;
 
@@ -17,20 +18,42 @@ public class Network {
 
     public Network() {
         try{
-            System.out.println("\nCompleting the socket : " + Cts.PORT1);
             this.socket = new Socket(Cts.HOST_NAME, Cts.PORT1);
             this.sender = new ObjectOutputStream(socket.getOutputStream());
             this.reciever = new ObjectInputStream(socket.getInputStream());
-            System.out.println("\nSending max tasks in Network Constructor\n");
-            sender.writeObject(Cts.NB_CORES);       //sending
         } catch (IOException e) {e.printStackTrace();}
     }
 
     public synchronized void send(Object ob) throws IOException{
-        sender.writeObject(ob);         //sending
+        sender.writeObject(ob);
     }
 
     public synchronized Object recieve() throws ClassNotFoundException, IOException {
-        return reciever.readObject();         //reading
+        return reciever.readObject();
+    }
+
+    public void closeResources() {
+        Runnable closable = new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    Scanner scanner = new Scanner(System.in);
+                    String request = scanner.nextLine();
+                    if(request.equals("end")) {
+                        try {
+                            sender.writeObject(true);
+                            Thread.sleep(5 * 1000);
+                            Main.off = true;
+                            // Thread.sleep(5 * 1000);
+                            sender.close();
+                            reciever.close();
+                            socket.close();
+                        } catch (IOException | InterruptedException e) {e.printStackTrace();}
+                    }
+                }
+            }
+        };
+        Thread closer = new Thread(closable);
+        closer.start();
     }
 }

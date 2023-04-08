@@ -17,14 +17,11 @@ public class Connection {
     private ObjectOutputStream sender;
     private ObjectInputStream reciever;
     private ArrayList<int[]> peasantsProgress;
-    private int maxTasks;
-    public Connection(int id, Socket socket, ObjectOutputStream obSender, ObjectInputStream obReciever, int maxTasks) {
+    public Connection(int id, Socket socket, ObjectOutputStream obSender, ObjectInputStream obReciever) {
         this.id = id;
         this.sender = obSender;
         this.reciever = obReciever;
         this.socket = socket;
-        this.maxTasks = maxTasks;
-        System.out.println("\nConnection created, id : " + id + "\n");
     }
     public synchronized int getId() {
         return id;
@@ -40,5 +37,10 @@ public class Connection {
     }
     public synchronized ObjectInputStream getReciever() {
         return reciever;
+    }
+    public void closeConnection() throws IOException {
+        sender.close();
+        reciever.close();
+        socket.close();
     }
 }

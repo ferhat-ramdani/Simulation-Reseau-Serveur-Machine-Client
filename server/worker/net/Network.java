@@ -16,19 +16,15 @@ public class Network {
     public void send(int connectionID, Object object) throws IOException, ClassNotFoundException {
         for (Connection connection : connections) {
             if(connection.getId() == connectionID) {
-                // System.out.print("\nSeding " + object + " to " + connectionID + " in Network\n");
-                connection.getSender().writeObject(object);         //sending
+                connection.getSender().writeObject(object);
             }
         }
     }
 
     public Object receive(int connectionID) throws IOException, ClassNotFoundException {
         for (Connection connection : connections) {
-            // System.out.println("\nThere is a connection in connections of id : " +
-            // connection.getId() + "\n found in Network receive method");
             if(connection.getId() == connectionID) {
-                // System.out.print("\nReading from " + connectionID + " in Network\n");
-                return connection.getReciever().readObject();         //reading
+                return connection.getReciever().readObject();
             }
         }
         return -1;
@@ -36,5 +32,24 @@ public class Network {
 
     public synchronized ArrayList<Connection> getConnections() {
         return connections;
+    }
+
+    public Connection getConnection(int connectionID) {
+        Connection c = new Connection(0, null, null, null);
+        for (Connection connection : connections) {
+            if(connection.getId() == connectionID) {
+                c = connection;
+            }
+        }
+        return c;
+    }
+
+    public void deleteConnection(int connectionID) {
+        for (Connection connection : connections) {
+            if(connection.getId() == connectionID) {
+                connections.remove(connection);
+                break;
+            }
+        }
     }
 }

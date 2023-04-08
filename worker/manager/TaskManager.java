@@ -1,18 +1,14 @@
-/**
- * This is a thread class that periodically listens 
- * through the server, and wheneven it recieves a task
- * through the taskSocket, it adds it to the queue
- * and notifies the peasants
- */
+
 package worker.manager;
 
 import java.io.IOException;
 import java.util.*;
 
-import worker.Network;
+import config.G;
 import worker.computer.Peasant;
+import worker.*;
 
-public class TaskManager extends Thread {
+public class TaskManager {
     private TaskQueue taskQueue;
     private Network net;
     private Peasant[] peasants;
@@ -22,37 +18,78 @@ public class TaskManager extends Thread {
         this.peasants = peasants;
     }
 
-    public void run() {
-        while(true){
-            try {
-                // System.out.println("\nReading in TaskManager\n");
-                Object receivedObject = net.recieve();            //reading
-                System.out.println("The read object is : " + receivedObject + " in TaskManager");
-                if(receivedObject instanceof String[]) {
-                    String[] task = (String[]) receivedObject;
-                    // System.out.println("\nAdding task to queue in TaskManager\n");       
-                    taskQueue.addTask(task);
-                    // Thread.sleep(3600 * 1000);
-                } else if(receivedObject instanceof String) {
-                    String request = (String) receivedObject;
-                    processor(request);
+    public void listen() {
+        Runnable listenable = new Runnable() {
+            @Override
+            public void run() {
+                while(!Main.off){
+                    try {
+                        Object receivedObject = net.recieve();
+                        if(receivedObject instanceof String[]) {
+                            String[] task = (String[]) receivedObject;     
+                            taskQueue.addTask(task);
+                        } else if(receivedObject instanceof String) {
+                            String request = (String) receivedObject;
+                            processor(request);
+                        }
+                    } catch (ClassNotFoundException | IOException e) { e.printStackTrace();}          
                 }
-            } catch (ClassNotFoundException | IOException e) { e.printStackTrace();}          
-        }
+            }
+        };
+
+        Runnable dispatchable = new Runnable() {
+            @Override
+            public void run() {
+                while(!Main.off){
+                    try {
+                        net.send(taskQueue.getDoneTask());
+                    } catch (IOException e) { e.printStackTrace();}
+                }
+            }
+        };
+
+        Runnable displayable = new Runnable() {
+            @Override
+            public void run() {
+                while(!Main.off){
+                    G.clearScreen();
+                    System.out.println("\n______________Tasks_____________\n");
+                    for (String[] task : taskQueue.getTasks()) {
+                        System.out.println(Arrays.toString(task));
+                    }
+                    System.out.println("\n______________Peasants_____________\n");
+                    for (Peasant peasant : peasants) {
+                        System.out.println(peasant.getName() + " : " + peasant.getProgress());
+                    }
+                    System.out.println("\n______________Done_Tasks_____________\n");
+                    for (CompletedTask doneTask : taskQueue.getDoneTasks()) {
+                        System.out.println(Arrays.toString(doneTask.getRange()));
+                    }
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) { e.printStackTrace();}
+                }
+            }
+        };
+
+        Thread listener = new Thread(listenable);
+        listener.start();
+        Thread dispatcher = new Thread(dispatchable);
+        dispatcher.start();
+        Thread displayer = new Thread(displayable);
+        displayer.start();
     }
 
     private void processor(String request) throws IOException {
-        // System.out.println("\nRead request : " + request + "\n");
         switch (request) {
             case "PROGRESS":
                 ArrayList<Integer> progress = new ArrayList<>();
                 for(Peasant peasant : peasants) {
                     progress.add(peasant.getProgress());
                 }
-                // System.out.println("\nSending progress\n");
-                net.send(progress);         //sending
+                net.send(progress);
                 break;
-
+                
             case "TASKS IN QUEUE":
                 net.send(taskQueue.getAvailableTasks());
                 break;
