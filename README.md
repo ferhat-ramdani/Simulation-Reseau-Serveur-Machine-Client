@@ -33,7 +33,7 @@ The worker folder contains the code for the worker software. It handles the comp
 ## Installation and Setup
 To use the "Distributed Computation of Persistence" project, follow these steps:
 
-1. Clone the project repository from [GitHub](https://github.com/your-repository-url).
+1. Clone the project repository from [GitHub](https://github.com/ferhat-ramdani/Simulation-Reseau-Serveur-Machine-Client).
 2. Install Java on your machine if it is not already installed.
 3. Configure the project by modifying the necessary settings and configuration files in the config folder.
 4. Compile the Java source files in each package using a Java compiler.
