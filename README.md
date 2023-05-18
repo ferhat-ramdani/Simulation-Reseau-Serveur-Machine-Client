@@ -49,5 +49,5 @@ To utilize the functionality of the "Distributed Computation of Persistence" pro
 5. Analyze and interpret the received results and statistics.
 
 ## Authors
-AHMIM Mohamed
-RAMDANI Ferhat
+- AHMIM Mohamed
+- RAMDANI Ferhat
